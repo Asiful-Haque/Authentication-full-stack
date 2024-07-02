@@ -12,39 +12,37 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     async function submitBtnFunction(event) {
-        event.preventDefault(); // Prevent the form from submitting in the traditional way
+        event.preventDefault();
 
-        const registerData = {
-            name: document.getElementById("name").value,
+        const loginData = {
             email: document.getElementById("email").value,
-            gender: document.getElementById("gender").value,
-            address: document.getElementById("address").value,
             password: document.getElementById("password").value,
         };
-        console.log(registerData);
+        // console.log(loginData);
 
         try {
-            const response = await fetch("/api/submit", {
+            const response = await fetch("/api/authentication", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(registerData),
+                body: JSON.stringify(loginData),
             });
 
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
 
-            showTemporaryAlert("Registered successfully!", 5000);
+            showTemporaryAlert("Logged in successfully!", 5000);
+            document.getElementById("loginForm").reset();
 
-            // Clear the form fields
-            document.getElementById("registrationForm").reset();
         } catch (error) {
             console.error("Error:", error);
-            alert("Error submitting data. Please try again.");
+            showTemporaryAlert("Email or Password incorrect!", 5000);
+            document.getElementById("loginForm").reset();
         }
     }
+
 
     function showTemporaryAlert(message, duration) {
         const alertDiv = document.createElement("div");

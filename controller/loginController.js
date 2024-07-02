@@ -2,20 +2,18 @@ const bcrypt = require("bcrypt");
 const userSchemaModel = require("../models/userSchema.js");
 
 exports.checkUser = async (req, res) => {
-    //const { email, password } = req.body;
-    const { Email, Password } = req.body;
+    const { email, password } = req.body;
 
     try {
-        // Find user by email
-        console.log(Email);
-        const user = await userSchemaModel.findOne({ Email: Email });
+        const users = await userSchemaModel.find();
+        
+        const user = users.find((user) => user.email === email);
 
         if (!user) {
             return res.status(404).send("User not found");
         }
 
-        // Compare the password provided
-        const isPasswordValid = await bcrypt.compare(Password, user.Password);
+        const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid email or password" });
